@@ -3,45 +3,45 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Free VIN Decoder & Vehicle Safety Audit | Official Data</title>
+    <title>VIN Audit Pro | Free Vehicle History & Safety Check</title>
     <meta name="description" content="Decode any VIN for free. Access official manufacturer specs, engine details, and safety records. Check for accidents and mileage fraud instantly.">
-    
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        :root { --primary: #0d6efd; --secondary: #0a47a3; --accent: #ff8c00; --bg: #f8f9fa; }
-        body { font-family: 'Inter', sans-serif; margin: 0; background-color: var(--bg); color: #212529; }
-        
+        :root { --primary: #0d6efd; --secondary: #0a47a3; --accent: #ff8c00; --danger: #dc3545; --bg: #f8f9fa; }
+        body { font-family: 'Inter', sans-serif; margin: 0; background-color: var(--bg); color: #212529; line-height: 1.6; }
         nav { background: white; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 10px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 1000; }
-        .logo { font-weight: 700; color: var(--secondary); }
-        .lang-select { padding: 8px; border-radius: 8px; border: 1px solid #ddd; font-weight: 600; cursor: pointer; }
-
+        .logo { font-weight: 700; color: var(--secondary); font-size: 1.1rem; }
+        .lang-select { padding: 8px; border-radius: 8px; border: 1px solid #ddd; font-weight: 600; cursor: pointer; background: #fff; }
         header { background: linear-gradient(135deg, var(--secondary), var(--primary)); color: white; padding: 60px 20px 100px; text-align: center; }
         .container { max-width: 900px; margin: -70px auto 50px; padding: 0 15px; }
-        .card { background: white; border-radius: 20px; padding: 30px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); margin-bottom: 30px; }
-        
+        .card { background: white; border-radius: 20px; padding: 30px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); margin-bottom: 25px; }
         .input-group { display: flex; gap: 10px; margin-bottom: 25px; }
         input { flex: 1; padding: 18px; border: 2px solid #edeff1; border-radius: 12px; font-size: 1.1rem; text-transform: uppercase; outline: none; }
-        .btn-decode { background: var(--primary); color: white; border: none; padding: 0 35px; border-radius: 12px; font-weight: 700; cursor: pointer; }
+        .btn-decode { background: var(--primary); color: white; border: none; padding: 0 35px; border-radius: 12px; font-weight: 700; cursor: pointer; transition: 0.3s; }
+        .btn-decode:hover { background: var(--secondary); }
         
+        #error-area { display: none; background: #fff5f5; border: 1px solid #feb2b2; padding: 20px; border-radius: 15px; text-align: center; animation: shake 0.5s; margin-bottom: 20px; }
+        .error-icon { color: var(--danger); font-size: 2.5rem; margin-bottom: 10px; }
+        @keyframes shake { 0%, 100% {transform: translateX(0);} 25% {transform: translateX(-5px);} 75% {transform: translateX(5px);} }
+
         #results-area { display: none; }
         .data-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin: 20px 0; }
         .data-item { background: #fdfdfd; border: 1px solid #eee; padding: 15px; border-radius: 12px; }
-        .label { font-size: 0.7rem; color: #888; display: block; }
-        .value { font-weight: 600; }
+        .label { font-size: 0.7rem; color: #888; display: block; text-transform: uppercase; }
+        .value { font-weight: 700; color: #333; }
+        .cta-box { background: #fff8f0; border: 2px solid #ffcc80; padding: 25px; border-radius: 15px; text-align: center; margin-top: 20px; }
+        .btn-affiliate { display: inline-block; background: var(--accent); color: white; text-decoration: none; padding: 18px 40px; border-radius: 12px; font-weight: 700; margin-top: 15px; box-shadow: 0 8px 20px rgba(255,140,0,0.3); border: none; cursor: pointer; width: 100%; font-size: 1.1rem; }
 
-        .cta-box { background: #fff8f0; border: 2px solid #ffcc80; padding: 25px; border-radius: 15px; text-align: center; }
-        .btn-affiliate { display: inline-block; background: var(--accent); color: white; text-decoration: none; padding: 18px 40px; border-radius: 12px; font-weight: 700; margin-top: 15px; box-shadow: 0 8px 20px rgba(255,140,0,0.3); }
-
-        /* FAQ Section */
-        .faq-container { margin-top: 40px; }
         .faq-item { margin-bottom: 15px; border-bottom: 1px solid #eee; padding-bottom: 10px; }
-        .faq-question { font-weight: 700; color: var(--secondary); cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
-        .faq-answer { font-size: 0.9rem; color: #555; margin-top: 8px; display: none; line-height: 1.5; }
+        .faq-question { font-weight: 700; color: var(--secondary); cursor: pointer; display: flex; justify-content: space-between; }
+        .faq-answer { font-size: 0.9rem; color: #555; margin-top: 8px; display: none; }
 
         #redirect-screen { display: none; text-align: center; padding: 60px 20px; }
         .progress-container { background: #eee; border-radius: 20px; height: 12px; margin: 30px 0; overflow: hidden; }
         .progress-bar { background: var(--accent); height: 100%; width: 0%; transition: width 0.3s; }
+        
+        footer { margin-top: 50px; padding: 40px 20px; background: #fff; border-top: 1px solid #eee; text-align: center; font-size: 0.8rem; color: #999; }
 
         @media (max-width: 600px) { .input-group { flex-direction: column; } .btn-decode { padding: 18px; } }
     </style>
@@ -59,7 +59,7 @@
 <div id="main-view">
     <header>
         <h1 id="title">Free VIN Decoder & Safety Check</h1>
-        <p id="subtitle">Official data from NHTSA & Manufacturer Databases</p>
+        <p id="subtitle">Official vehicle data for smart buyers</p>
     </header>
 
     <div class="container">
@@ -68,8 +68,16 @@
                 <input type="text" id="vinInput" placeholder="Enter VIN..." maxlength="17">
                 <button class="btn-decode" onclick="decodeVIN()" id="decodeBtn">DECODE</button>
             </div>
-            <div id="loader" style="display:none; text-align:center;"><i class="fas fa-circle-notch fa-spin fa-2x" style="color: var(--primary);"></i></div>
             
+            <div id="loader" style="display:none; text-align:center; padding: 20px;"><i class="fas fa-circle-notch fa-spin fa-2x" style="color: var(--primary);"></i></div>
+            
+            <div id="error-area">
+                <i class="fas fa-exclamation-triangle error-icon"></i>
+                <h3 id="errTitle">VIN Not Found</h3>
+                <p id="errDesc">Make sure you entered all 17 characters correctly. Remember: VINs do not use I, O, or Q.</p>
+                <button onclick="resetSearch()" style="background: var(--primary); color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: 600;" id="errBtn">Try Again</button>
+            </div>
+
             <div id="results-area">
                 <div class="data-grid">
                     <div class="data-item"><span class="label" id="lblBasic">Vehicle</span><span class="value" id="valBasic">-</span></div>
@@ -77,22 +85,22 @@
                     <div class="data-item"><span class="label" id="lblOrigin">Origin</span><span class="value" id="valOrigin">-</span></div>
                 </div>
                 <div class="cta-box">
-                    <h3 id="ctaTitle">⚠️ Safety Records Found</h3>
-                    <p id="ctaDesc" style="font-size:0.85rem">Factory specs verified. Accident records and mileage require a secure portal.</p>
+                    <h3 id="ctaTitle" style="margin-top:0;">⚠️ Full Records Restricted</h3>
+                    <p id="ctaDesc" style="font-size:0.85rem">Basic specs verified. Accident history and odometer records require a secure database link.</p>
                     <button onclick="startRedirect()" class="btn-affiliate" id="ctaBtn">UNLOCK FULL HISTORY →</button>
                 </div>
             </div>
         </div>
 
-        <div class="card faq-container">
-            <h2 id="faqTitle">Frequently Asked Questions</h2>
+        <div class="card">
+            <h2 id="faqTitle" style="margin-top:0; font-size: 1.2rem;">FAQ</h2>
             <div class="faq-item">
-                <div class="faq-question" onclick="toggleFaq(0)"><span id="q1">How to check if a car was in an accident for free?</span> <i class="fas fa-chevron-down"></i></div>
-                <div class="faq-answer" id="a1">You can check basic manufacturer specs for free using our VIN decoder. For detailed accident history, you need a full report from providers like the one linked in our 'Unlock' section.</div>
+                <div class="faq-question" onclick="toggleFaq(0)"><span id="q1">Is this VIN decoder free?</span> <i class="fas fa-chevron-down"></i></div>
+                <div class="faq-answer" id="a1">Yes, basic decoding is 100% free using official databases. Extended reports may have a cost from third-party providers.</div>
             </div>
             <div class="faq-item">
-                <div class="faq-question" onclick="toggleFaq(1)"><span id="q2">Is the VIN decoder data official?</span> <i class="fas fa-chevron-down"></i></div>
-                <div class="faq-answer" id="a2">Yes, our tool pulls data directly from the NHTSA (National Highway Traffic Safety Administration) database, ensuring high accuracy for vehicle identification.</div>
+                <div class="faq-question" onclick="toggleFaq(1)"><span id="q2">What is a VIN?</span> <i class="fas fa-chevron-down"></i></div>
+                <div class="faq-answer" id="a2">The Vehicle Identification Number (VIN) is a unique 17-character code that serves as the fingerprint of your car.</div>
             </div>
         </div>
     </div>
@@ -100,34 +108,41 @@
 
 <div id="redirect-screen" class="container">
     <div class="card">
-        <h2 id="redTitle">Syncing Private Records...</h2>
+        <h2 id="redTitle">Connecting to Private Databases...</h2>
         <div class="progress-container"><div class="progress-bar" id="progressBar"></div></div>
-        <p id="redDesc" style="font-size: 0.9rem; color: #666;">Establishing encrypted tunnel to NMVTIS & Insurance Databases...</p>
+        <p id="redDesc" style="font-size: 0.9rem; color: #666;">Establishing encrypted tunnel to Insurance & Police records...</p>
     </div>
 </div>
 
+<footer id="footer">
+    <div class="container">
+        <p id="footerText">Data pulled from NHTSA. Historical reports provided by external partners.</p>
+        <p>&copy; 2026 VIN Audit Pro</p>
+    </div>
+</footer>
+
 <script>
     let currentLang = 'en';
-    const affiliateURL = "TU_LINK_AQUÍ";
+    const affiliateURL = "https://omg10.com/4/9616671"; // TU LINK DE MONETAG
 
     const i18n = {
         en: {
-            title: "Free VIN Decoder & Safety Check", subtitle: "Official data from NHTSA & Manufacturer Databases",
+            title: "Free VIN Decoder & Safety Check", subtitle: "Official vehicle data for smart buyers",
             placeholder: "Enter VIN...", decode: "DECODE", lblBasic: "Vehicle", lblEngine: "Engine", lblOrigin: "Origin",
-            ctaTitle: "⚠️ Safety Records Found", ctaDesc: "Factory specs verified. Accident records and mileage require a secure portal.", ctaBtn: "UNLOCK FULL HISTORY →",
-            faqTitle: "Frequently Asked Questions",
-            q1: "How to check if a car was in an accident for free?", a1: "You can check basic manufacturer specs for free using our VIN decoder. For detailed accident history, you need a full report from providers like the one linked in our 'Unlock' section.",
-            q2: "Is the VIN decoder data official?", a2: "Yes, our tool pulls data directly from the NHTSA database, ensuring high accuracy for vehicle identification.",
-            redTitle: "Syncing Private Records...", redDesc: "Establishing encrypted tunnel to NMVTIS & Insurance Databases..."
+            ctaTitle: "⚠️ Full Records Restricted", ctaDesc: "Basic specs verified. Accident history and odometer records require a secure database link.", ctaBtn: "UNLOCK FULL HISTORY →",
+            errTitle: "VIN Not Found", errDesc: "Make sure you entered all 17 characters correctly. Remember: VINs do not use I, O, or Q.", errBtn: "Try Again",
+            faqTitle: "FAQ", q1: "Is this VIN decoder free?", a1: "Yes, basic decoding is 100% free using official databases.", q2: "What is a VIN?", a2: "The 17-character code that serves as the car's fingerprint.",
+            redTitle: "Connecting to Private Databases...", redDesc: "Establishing encrypted tunnel to Insurance & Police records...",
+            footerText: "Data pulled from NHTSA. Historical reports provided by external partners."
         },
         es: {
-            title: "Decodificador VIN Gratis", subtitle: "Datos oficiales de la NHTSA y Fabricantes",
+            title: "Decodificador VIN Gratis", subtitle: "Datos oficiales para compradores inteligentes",
             placeholder: "Ingresa el VIN...", decode: "DECODIFICAR", lblBasic: "Vehículo", lblEngine: "Motor", lblOrigin: "Origen",
-            ctaTitle: "⚠️ Registros Encontrados", ctaDesc: "Specs de fábrica confirmadas. Los récords de accidentes y kilometraje requieren un portal seguro.", ctaBtn: "DESBLOQUEAR HISTORIAL →",
-            faqTitle: "Preguntas Frecuentes",
-            q1: "¿Cómo saber si un auto fue chocado gratis?", a1: "Puedes verificar las especificaciones básicas gratis con nuestra herramienta. Para un historial detallado de choques, se requiere un informe completo de proveedores certificados.",
-            q2: "¿Los datos del decodificador son oficiales?", a2: "Sí, nuestra herramienta obtiene datos directamente de la base de datos de la NHTSA, garantizando alta precisión en la identificación del vehículo.",
-            redTitle: "Sincronizando Registros...", redDesc: "Estableciendo túnel cifrado con bases de datos de seguros y NMVTIS..."
+            ctaTitle: "⚠️ Registros Restringidos", ctaDesc: "Datos de fábrica confirmados. El historial de accidentes y millaje requiere enlace a base de datos segura.", ctaBtn: "DESBLOQUEAR HISTORIAL →",
+            errTitle: "VIN No Encontrado", errDesc: "Asegúrate de ingresar los 17 caracteres. Recuerda: los VIN no usan las letras I, O, ni Q.", errBtn: "Reintentar",
+            faqTitle: "Preguntas Frecuentes", q1: "¿Es gratis este decodificador?", a1: "Sí, la decodificación básica es 100% gratuita usando bases oficiales.", q2: "¿Qué es el VIN?", a2: "Es el código de 17 caracteres que funciona como el DNI de tu vehículo.",
+            redTitle: "Conectando con Bases Privadas...", redDesc: "Estableciendo túnel cifrado con registros de seguros y policía...",
+            footerText: "Datos obtenidos de la NHTSA. Informes históricos provistos por socios externos."
         }
     };
 
@@ -143,11 +158,15 @@
         document.getElementById('ctaTitle').innerText = t.ctaTitle;
         document.getElementById('ctaDesc').innerText = t.ctaDesc;
         document.getElementById('ctaBtn').innerText = t.ctaBtn;
+        document.getElementById('errTitle').innerText = t.errTitle;
+        document.getElementById('errDesc').innerText = t.errDesc;
+        document.getElementById('errBtn').innerText = t.errBtn;
         document.getElementById('faqTitle').innerText = t.faqTitle;
         document.getElementById('q1').innerText = t.q1; document.getElementById('a1').innerText = t.a1;
         document.getElementById('q2').innerText = t.q2; document.getElementById('a2').innerText = t.a2;
         document.getElementById('redTitle').innerText = t.redTitle;
         document.getElementById('redDesc').innerText = t.redDesc;
+        document.getElementById('footerText').innerText = t.footerText;
     }
 
     function toggleFaq(index) {
@@ -157,18 +176,33 @@
 
     async function decodeVIN() {
         const vin = document.getElementById('vinInput').value.trim();
-        if (vin.length < 11) return alert("Invalid VIN");
+        if (vin.length < 11) { showError(); return; }
         document.getElementById('loader').style.display = 'block';
+        document.getElementById('results-area').style.display = 'none';
+        document.getElementById('error-area').style.display = 'none';
+
         try {
             const res = await fetch(`https://vpic.nhtsa.dot.gov/api/vehicles/DecodeVinValues/${vin}?format=json`);
             const data = await res.json();
             const v = data.Results[0];
-            document.getElementById('valBasic').innerText = `${v.ModelYear} ${v.Make} ${v.Model}`;
-            document.getElementById('valEngine').innerText = `${v.DisplacementL || ''}L ${v.EngineConfiguration || ''}`;
-            document.getElementById('valOrigin').innerText = v.PlantCountry || 'N/A';
-            document.getElementById('results-area').style.display = 'block';
-        } catch (e) { alert("Error."); }
+            if (!v.Make || v.Make === "") { showError(); } else {
+                document.getElementById('valBasic').innerText = `${v.ModelYear} ${v.Make} ${v.Model}`;
+                document.getElementById('valEngine').innerText = `${v.DisplacementL || ''}L ${v.EngineConfiguration || ''}`;
+                document.getElementById('valOrigin').innerText = v.PlantCountry || 'N/A';
+                document.getElementById('results-area').style.display = 'block';
+            }
+        } catch (e) { showError(); }
         document.getElementById('loader').style.display = 'none';
+    }
+
+    function showError() {
+        document.getElementById('results-area').style.display = 'none';
+        document.getElementById('error-area').style.display = 'block';
+    }
+
+    function resetSearch() {
+        document.getElementById('vinInput').value = "";
+        document.getElementById('error-area').style.display = 'none';
     }
 
     function startRedirect() {
@@ -178,8 +212,8 @@
         const interval = setInterval(() => {
             p += 5; bar.style.width = p + "%";
             if (p >= 100) { clearInterval(interval); window.location.href = affiliateURL; }
-        }, 100);
+        }, 80);
     }
 </script>
 </body>
-</html>
+    </html>   
