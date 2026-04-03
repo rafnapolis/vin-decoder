@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VIN Audit Pro | Free Vehicle History & Specs</title>
-    <meta name="description" content="Official VIN decoder for USA. Get factory specs, engine details, and safety records. Check for accidents and title status.">
+    <title>VIN Audit Pro | Free Vehicle Specs & History Check</title>
+    <meta name="description" content="Official VIN decoder for USA. Get factory specs, engine details, and safety records. Access full history reports with EpicVIN.">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
@@ -22,36 +22,25 @@
         input:focus { border-color: var(--primary); box-shadow: 0 0 0 4px rgba(13,110,253,0.1); }
         .btn-decode { background: var(--primary); color: white; border: none; padding: 0 35px; border-radius: 12px; font-weight: 700; cursor: pointer; transition: 0.3s; }
         
-        #error-area { display: none; background: #fff5f5; border: 1px solid #feb2b2; padding: 25px; border-radius: 15px; text-align: center; animation: shake 0.5s; margin-bottom: 20px; }
-        .error-icon { color: var(--danger); font-size: 2.5rem; margin-bottom: 10px; }
-        @keyframes shake { 0%, 100% {transform: translateX(0);} 25% {transform: translateX(-5px);} 75% {transform: translateX(5px);} }
-
+        #error-area { display: none; background: #fff5f5; border: 1px solid #feb2b2; padding: 25px; border-radius: 15px; text-align: center; margin-bottom: 20px; }
         #results-area { display: none; }
         .data-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin: 20px 0; }
         .data-item { background: #fdfdfd; border: 1px solid #eee; padding: 15px; border-radius: 12px; }
-        .label { font-size: 0.7rem; color: #888; display: block; text-transform: uppercase; letter-spacing: 0.5px; }
+        .label { font-size: 0.7rem; color: #888; display: block; text-transform: uppercase; }
         .value { font-weight: 700; color: #333; font-size: 1.05rem; }
         
         .cta-box { background: #fff8f0; border: 2px solid #ffcc80; padding: 25px; border-radius: 15px; text-align: center; margin-top: 20px; }
-        .btn-affiliate { display: inline-block; background: var(--accent); color: white; text-decoration: none; padding: 20px 40px; border-radius: 12px; font-weight: 700; margin-top: 15px; box-shadow: 0 8px 20px rgba(255,140,0,0.3); border: none; cursor: pointer; width: 100%; font-size: 1.1rem; transition: 0.3s; }
-        .btn-affiliate:hover { transform: translateY(-2px); box-shadow: 0 12px 25px rgba(255,140,0,0.4); }
-
-        .faq-item { margin-bottom: 15px; border-bottom: 1px solid #eee; padding-bottom: 10px; }
-        .faq-question { font-weight: 700; color: var(--secondary); cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
-        .faq-answer { font-size: 0.9rem; color: #555; margin-top: 8px; display: none; }
+        .btn-epic { display: inline-block; background: var(--accent); color: white; text-decoration: none; padding: 20px 40px; border-radius: 12px; font-weight: 700; margin-top: 15px; box-shadow: 0 8px 20px rgba(255,140,0,0.3); border: none; cursor: pointer; width: 100%; font-size: 1.1rem; transition: 0.3s; }
+        .btn-epic:hover { transform: translateY(-2px); box-shadow: 0 12px 25px rgba(255,140,0,0.4); }
 
         #redirect-screen { display: none; text-align: center; padding: 80px 20px; }
         .progress-container { background: #eee; border-radius: 20px; height: 14px; margin: 30px 0; overflow: hidden; }
         .progress-bar { background: var(--accent); height: 100%; width: 0%; transition: width 0.3s; }
         
-        .monetag-link { font-size: 0.8rem; color: #999; text-decoration: none; margin-top: 20px; display: inline-block; }
         footer { margin-top: 50px; padding: 40px 20px; background: #fff; border-top: 1px solid #eee; text-align: center; font-size: 0.85rem; color: #777; }
+        .monetag-link { font-size: 0.8rem; color: #bbb; text-decoration: none; margin-top: 15px; display: block; }
 
-        @media (max-width: 600px) { 
-            .input-group { flex-direction: column; } 
-            .btn-decode { padding: 18px; } 
-            header { padding: 40px 20px 80px; }
-        }
+        @media (max-width: 600px) { .input-group { flex-direction: column; } .btn-decode { padding: 18px; } }
     </style>
 </head>
 <body>
@@ -80,9 +69,8 @@
             <div id="loader" style="display:none; text-align:center; padding: 20px;"><i class="fas fa-circle-notch fa-spin fa-3x" style="color: var(--primary);"></i></div>
             
             <div id="error-area">
-                <i class="fas fa-exclamation-triangle error-icon"></i>
-                <h3 id="errTitle">VIN Not Found</h3>
-                <p id="errDesc">Check your VIN and try again. Remember: VINs never use letters I, O, or Q.</p>
+                <h3 id="errTitle" style="color: var(--danger);">VIN Not Found</h3>
+                <p id="errDesc">Check your VIN. Remember: VINs never use letters I, O, or Q.</p>
                 <button onclick="resetSearch()" style="background: var(--primary); color: white; border: none; padding: 12px 25px; border-radius: 10px; cursor: pointer; font-weight: 700;" id="errBtn">Try Again</button>
             </div>
 
@@ -90,25 +78,13 @@
                 <div class="data-grid">
                     <div class="data-item"><span class="label" id="lblBasic">Vehicle</span><span class="value" id="valBasic">-</span></div>
                     <div class="data-item"><span class="label" id="lblEngine">Engine</span><span class="value" id="valEngine">-</span></div>
-                    <div class="data-item"><span class="label" id="lblOrigin">Plant / Origin</span><span class="value" id="valOrigin">-</span></div>
+                    <div class="data-item"><span class="label" id="lblOrigin">Origin</span><span class="value" id="valOrigin">-</span></div>
                 </div>
                 <div class="cta-box">
                     <h3 id="ctaTitle" style="margin-top:0;">⚠️ History Records Restricted</h3>
-                    <p id="ctaDesc" style="font-size:0.9rem">Basic specs verified. Accident reports, title history, and odometer records require a secure link.</p>
-                    <button onclick="startRedirect()" class="btn-affiliate" id="ctaBtn">UNLOCK FULL HISTORY REPORT →</button>
+                    <p id="ctaDesc" style="font-size:0.9rem">Technical specs verified. Click below to check for accidents, title brands, and auction photos.</p>
+                    <button onclick="startRedirect()" class="btn-epic" id="ctaBtn">GET FULL HISTORY REPORT →</button>
                 </div>
-            </div>
-        </div>
-
-        <div class="card">
-            <h2 id="faqTitle" style="margin-top:0; font-size: 1.3rem;">Help Center</h2>
-            <div class="faq-item">
-                <div class="faq-question" onclick="toggleFaq(0)"><span id="q1">Is this tool official?</span> <i class="fas fa-chevron-down"></i></div>
-                <div class="faq-answer" id="a1">Yes, our basic decoding service uses the NHTSA (National Highway Traffic Safety Administration) official database.</div>
-            </div>
-            <div class="faq-item">
-                <div class="faq-question" onclick="toggleFaq(1)"><span id="q2">Why check a VIN?</span> <i class="fas fa-chevron-down"></i></div>
-                <div class="faq-answer" id="a2">To verify if the seller is telling the truth about the engine, model year, and origin, and to avoid buying salvaged vehicles.</div>
             </div>
         </div>
     </div>
@@ -116,45 +92,41 @@
 
 <div id="redirect-screen" class="container">
     <div class="card" style="margin-top: 50px;">
-        <h2 id="redTitle">Connecting to Secure Database...</h2>
+        <h2 id="redTitle">Connecting to EpicVIN Secure Servers...</h2>
         <div class="progress-container"><div class="progress-bar" id="progressBar"></div></div>
-        <p id="redDesc" style="font-size: 1rem; color: #666;">Synchronizing with Insurance and Police archives for VIN: <span id="syncVin" style="font-weight: 700; color: #333;"></span></p>
+        <p id="redDesc" style="font-size: 1rem; color: #666;">Generating secure access for VIN: <span id="syncVin" style="font-weight:700; color:#333;"></span></p>
     </div>
 </div>
 
-<footer id="footer">
+<footer>
     <div class="container">
-        <p id="footerText">Real-time data from NHTSA. Full reports provided by VinAudit.</p>
-        <a href="https://omg10.com/4/9616671" class="monetag-link" target="_blank">Partner Offers & Auctions</a>
-        <p style="margin-top:20px;">&copy; 2026 VIN Audit Pro - USA Market Tool</p>
+        <p id="footerText">Data from NHTSA. Full reports and auction photos provided by EpicVIN.</p>
+        <a href="https://omg10.com/4/10740816" class="monetag-link" target="_blank">Partner Deals & Ads</a>
+        <p style="margin-top:15px;">&copy; 2026 VIN Audit Pro</p>
     </div>
 </footer>
 
 <script>
     let currentLang = 'en';
-    
-    // CONFIGURACIÓN DE TUS LINKS
-    const affiliateID = "metodorelacion";
-    const monetagLink = "https://omg10.com/4/9616671";
+    const epicID = "mk2xwvsrxu92o"; // TU NUEVO ID DE EPICVIN
+    const monetagURL = "https://omg10.com/4/10740816";
 
     const i18n = {
         en: {
             title: "Free VIN Decoder & Safety Check", subtitle: "Official vehicle data for smart buyers",
-            placeholder: "Enter 17-digit VIN...", decode: "DECODE", lblBasic: "Vehicle", lblEngine: "Engine", lblOrigin: "Plant / Origin",
-            ctaTitle: "⚠️ History Records Restricted", ctaDesc: "Basic specs verified. Accident reports, title history, and odometer records require a secure link.", ctaBtn: "UNLOCK FULL HISTORY REPORT →",
-            errTitle: "VIN Not Found", errDesc: "Check your VIN and try again. Remember: VINs never use letters I, O, or Q.", errBtn: "Try Again",
-            faqTitle: "Help Center", q1: "Is this tool official?", a1: "Yes, our basic decoding service uses the NHTSA official database.", q2: "Why check a VIN?", a2: "To verify engine data, year, and origin to avoid scams.",
-            redTitle: "Connecting to Secure Database...", redDesc: "Synchronizing with Insurance and Police archives for VIN:",
-            footerText: "Real-time data from NHTSA. Full reports provided by VinAudit."
+            placeholder: "Enter 17-digit VIN...", decode: "DECODE", lblBasic: "Vehicle", lblEngine: "Engine", lblOrigin: "Origin",
+            ctaTitle: "⚠️ History Records Restricted", ctaDesc: "Technical specs verified. Click below to check for accidents, title brands, and auction photos.", ctaBtn: "GET FULL HISTORY REPORT →",
+            errTitle: "VIN Not Found", errDesc: "Check your VIN. Remember: VINs never use letters I, O, or Q.", errBtn: "Try Again",
+            redTitle: "Connecting to EpicVIN Secure Servers...", redDesc: "Generating secure access for VIN:",
+            footerText: "Data from NHTSA. Full reports and auction photos provided by EpicVIN."
         },
         es: {
             title: "Decodificador VIN Gratis", subtitle: "Datos oficiales para compradores inteligentes",
-            placeholder: "Ingresa los 17 dígitos...", decode: "DECODIFICAR", lblBasic: "Vehículo", lblEngine: "Motorización", lblOrigin: "Planta / Origen",
-            ctaTitle: "⚠️ Registros de Historial Restringidos", ctaDesc: "Especificaciones confirmadas. El historial de choques, títulos y kilometraje requiere un enlace seguro.", ctaBtn: "DESBLOQUEAR HISTORIAL COMPLETO →",
-            errTitle: "VIN No Encontrado", errDesc: "Revisa el código e intenta de nuevo. Recuerda: los VIN no usan las letras I, O, ni Q.", errBtn: "Reintentar",
-            faqTitle: "Centro de Ayuda", q1: "¿Es oficial esta herramienta?", a1: "Sí, la decodificación básica utiliza la base de datos oficial de la NHTSA de EE.UU.", q2: "¿Por qué revisar el VIN?", a2: "Para verificar motor, año y origen, evitando estafas o vehículos con pérdida total.",
-            redTitle: "Conectando con Base de Datos Segura...", redDesc: "Sincronizando con archivos de Seguros y Policía para el VIN:",
-            footerText: "Datos en tiempo real de la NHTSA. Reportes completos provistos por VinAudit."
+            placeholder: "Ingresa los 17 dígitos...", decode: "DECODIFICAR", lblBasic: "Vehículo", lblEngine: "Motor", lblOrigin: "Origen",
+            ctaTitle: "⚠️ Historial Restringido", ctaDesc: "Datos técnicos confirmados. Haz clic abajo para revisar choques, títulos y fotos de subasta.", ctaBtn: "OBTENER REPORTE COMPLETO →",
+            errTitle: "VIN No Encontrado", errDesc: "Revisa el código. Los VIN no usan las letras I, O, ni Q.", errBtn: "Reintentar",
+            redTitle: "Conectando con Servidores de EpicVIN...", redDesc: "Generando acceso seguro para el VIN:",
+            footerText: "Datos de la NHTSA. Reportes y fotos de subasta provistos por EpicVIN."
         }
     };
 
@@ -173,23 +145,14 @@
         document.getElementById('errTitle').innerText = t.errTitle;
         document.getElementById('errDesc').innerText = t.errDesc;
         document.getElementById('errBtn').innerText = t.errBtn;
-        document.getElementById('faqTitle').innerText = t.faqTitle;
-        document.getElementById('q1').innerText = t.q1; document.getElementById('a1').innerText = t.a1;
-        document.getElementById('q2').innerText = t.q2; document.getElementById('a2').innerText = t.a2;
         document.getElementById('redTitle').innerText = t.redTitle;
         document.getElementById('redDesc').innerText = t.redDesc;
         document.getElementById('footerText').innerText = t.footerText;
     }
 
-    function toggleFaq(index) {
-        const answers = document.querySelectorAll('.faq-answer');
-        answers[index].style.display = answers[index].style.display === 'block' ? 'none' : 'block';
-    }
-
     async function decodeVIN() {
         const vin = document.getElementById('vinInput').value.trim();
         if (vin.length < 11) { showError(); return; }
-        
         document.getElementById('loader').style.display = 'block';
         document.getElementById('results-area').style.display = 'none';
         document.getElementById('error-area').style.display = 'none';
@@ -198,12 +161,9 @@
             const res = await fetch(`https://vpic.nhtsa.dot.gov/api/vehicles/DecodeVinValues/${vin}?format=json`);
             const data = await res.json();
             const v = data.Results[0];
-
-            if (!v.Make || v.Make === "") {
-                showError();
-            } else {
+            if (!v.Make || v.Make === "") { showError(); } else {
                 document.getElementById('valBasic').innerText = `${v.ModelYear} ${v.Make} ${v.Model}`;
-                document.getElementById('valEngine').innerText = `${v.DisplacementL || ''}L ${v.EngineConfiguration || ''} ${v.EngineCylinders || ''}cyl`;
+                document.getElementById('valEngine').innerText = `${v.DisplacementL || ''}L ${v.EngineConfiguration || ''}`;
                 document.getElementById('valOrigin').innerText = v.PlantCountry || 'USA Records';
                 document.getElementById('results-area').style.display = 'block';
             }
@@ -219,26 +179,20 @@
     function resetSearch() {
         document.getElementById('vinInput').value = "";
         document.getElementById('error-area').style.display = 'none';
-        document.getElementById('vinInput').focus();
     }
 
     function startRedirect() {
         const vin = document.getElementById('vinInput').value.trim();
-        // Si por alguna razón el campo está vacío, usamos el de ejemplo para no romper el link
-        const finalVin = vin || "1VXBR12EXCP901213";
-        
-        // CONSTRUCCIÓN DEL LINK DINÁMICO
-        const finalURL = `https://www.vinaudit.com/report?affid=${affiliateID}&vin=${finalVin}`;
+        // EpicVIN usa esta estructura para afiliados:
+        const finalURL = `https://epicvin.com/check-vin-number/${vin}?a_aid=${epicID}`;
 
         document.getElementById('main-view').style.display = 'none';
-        document.getElementById('syncVin').innerText = finalVin;
+        document.getElementById('syncVin').innerText = vin || "Search";
         document.getElementById('redirect-screen').style.display = 'block';
         
-        let p = 0; 
-        const bar = document.getElementById('progressBar');
+        let p = 0; const bar = document.getElementById('progressBar');
         const interval = setInterval(() => {
-            p += 10; 
-            bar.style.width = p + "%";
+            p += 10; bar.style.width = p + "%";
             if (p >= 100) { 
                 clearInterval(interval); 
                 window.location.href = finalURL; 
@@ -247,4 +201,4 @@
     }
 </script>
 </body>
-                </html>
+    </html>
