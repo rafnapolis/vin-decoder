@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>VIN Audit Pro | Free Vehicle Specs & History Check</title>
-    <meta name="description" content="Official VIN decoder for USA. Get factory specs, engine details, and safety records. Access full history reports with EpicVIN.">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
@@ -12,77 +11,62 @@
         body { font-family: 'Inter', sans-serif; margin: 0; background-color: var(--bg); color: #212529; line-height: 1.6; }
         nav { background: white; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 10px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 1000; }
         .logo { font-weight: 700; color: var(--secondary); display: flex; align-items: center; gap: 8px; }
-        .lang-select { padding: 8px; border-radius: 8px; border: 1px solid #ddd; font-weight: 600; cursor: pointer; background: #fff; }
         header { background: linear-gradient(135deg, var(--secondary), var(--primary)); color: white; padding: 60px 20px 100px; text-align: center; }
         .container { max-width: 900px; margin: -70px auto 50px; padding: 0 15px; }
         .card { background: white; border-radius: 20px; padding: 30px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); margin-bottom: 25px; }
-        
         .input-group { display: flex; gap: 10px; margin-bottom: 25px; }
-        input { flex: 1; padding: 18px; border: 2px solid #edeff1; border-radius: 12px; font-size: 1.1rem; text-transform: uppercase; outline: none; transition: 0.3s; }
-        input:focus { border-color: var(--primary); box-shadow: 0 0 0 4px rgba(13,110,253,0.1); }
-        .btn-decode { background: var(--primary); color: white; border: none; padding: 0 35px; border-radius: 12px; font-weight: 700; cursor: pointer; transition: 0.3s; }
-        
-        #error-area { display: none; background: #fff5f5; border: 1px solid #feb2b2; padding: 25px; border-radius: 15px; text-align: center; margin-bottom: 20px; }
-        #results-area { display: none; }
+        input { flex: 1; padding: 18px; border: 2px solid #edeff1; border-radius: 12px; font-size: 1.1rem; text-transform: uppercase; outline: none; }
+        input:focus { border-color: var(--primary); }
+        .btn-decode { background: var(--primary); color: white; border: none; padding: 0 35px; border-radius: 12px; font-weight: 700; cursor: pointer; }
+        #results-area, #error-area, #loader { display: none; }
         .data-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin: 20px 0; }
         .data-item { background: #fdfdfd; border: 1px solid #eee; padding: 15px; border-radius: 12px; }
         .label { font-size: 0.7rem; color: #888; display: block; text-transform: uppercase; }
         .value { font-weight: 700; color: #333; font-size: 1.05rem; }
-        
         .cta-box { background: #fff8f0; border: 2px solid #ffcc80; padding: 25px; border-radius: 15px; text-align: center; margin-top: 20px; }
-        .btn-epic { display: inline-block; background: var(--accent); color: white; text-decoration: none; padding: 20px 40px; border-radius: 12px; font-weight: 700; margin-top: 15px; box-shadow: 0 8px 20px rgba(255,140,0,0.3); border: none; cursor: pointer; width: 100%; font-size: 1.1rem; transition: 0.3s; }
-
+        .btn-epic { display: inline-block; background: var(--accent); color: white; text-decoration: none; padding: 20px 40px; border-radius: 12px; font-weight: 700; width: 100%; border: none; cursor: pointer; font-size: 1.1rem; }
         #redirect-screen { display: none; text-align: center; padding: 80px 20px; }
         .progress-container { background: #eee; border-radius: 20px; height: 14px; margin: 30px 0; overflow: hidden; }
         .progress-bar { background: var(--accent); height: 100%; width: 0%; transition: width 0.3s; }
-        
-        footer { margin-top: 50px; padding: 40px 20px; background: #fff; border-top: 1px solid #eee; text-align: center; font-size: 0.85rem; color: #777; }
-        .monetag-link { font-size: 0.8rem; color: #bbb; text-decoration: none; margin-top: 15px; display: block; }
-
+        footer { padding: 40px 20px; text-align: center; font-size: 0.85rem; color: #777; }
         @media (max-width: 600px) { .input-group { flex-direction: column; } .btn-decode { padding: 18px; } }
     </style>
 </head>
 <body>
 
-<nav>
-    <div class="logo"><i class="fas fa-shield-alt"></i> VIN AUDIT PRO</div>
-    <select class="lang-select" onchange="changeLang(this.value)">
-        <option value="en">🇺🇸 English</option>
-        <option value="es">🇪🇸 Español</option>
-    </select>
-</nav>
+<nav><div class="logo"><i class="fas fa-shield-alt"></i> VIN AUDIT PRO</div></nav>
 
 <div id="main-view">
     <header>
-        <h1 id="title">Free VIN Decoder & Safety Check</h1>
-        <p id="subtitle">Official vehicle data for smart buyers</p>
+        <h1>Free VIN Decoder & Safety Check</h1>
+        <p>Official vehicle data for smart buyers</p>
     </header>
 
     <div class="container">
         <div class="card">
             <div class="input-group">
                 <input type="text" id="vinInput" placeholder="Enter 17-digit VIN..." maxlength="17">
-                <button class="btn-decode" onclick="decodeVIN()" id="decodeBtn">DECODE</button>
+                <button class="btn-decode" id="decodeBtn">DECODE</button>
             </div>
             
-            <div id="loader" style="display:none; text-align:center; padding: 20px;"><i class="fas fa-circle-notch fa-spin fa-3x" style="color: var(--primary);"></i></div>
+            <div id="loader" style="text-align:center; padding: 20px;"><i class="fas fa-circle-notch fa-spin fa-3x" style="color: var(--primary);"></i></div>
             
             <div id="error-area">
-                <h3 id="errTitle" style="color: var(--danger);">VIN Not Found</h3>
-                <p id="errDesc">Check your VIN. No letters I, O, or Q allowed.</p>
-                <button onclick="resetSearch()" style="background: var(--primary); color: white; border: none; padding: 12px 25px; border-radius: 10px; cursor: pointer;" id="errBtn">Try Again</button>
+                <h3 style="color: var(--danger);">VIN Not Found</h3>
+                <p>Check your VIN. No letters I, O, or Q allowed.</p>
+                <button onclick="location.reload()" style="background: var(--primary); color: white; border: none; padding: 12px 25px; border-radius: 10px; cursor: pointer;">Try Again</button>
             </div>
 
             <div id="results-area">
                 <div class="data-grid">
-                    <div class="data-item"><span class="label" id="lblBasic">Vehicle</span><span class="value" id="valBasic">-</span></div>
-                    <div class="data-item"><span class="label" id="lblEngine">Engine</span><span class="value" id="valEngine">-</span></div>
-                    <div class="data-item"><span class="label" id="lblOrigin">Origin</span><span class="value" id="valOrigin">-</span></div>
+                    <div class="data-item"><span class="label">Vehicle</span><span class="value" id="valBasic">-</span></div>
+                    <div class="data-item"><span class="label">Engine</span><span class="value" id="valEngine">-</span></div>
+                    <div class="data-item"><span class="label">Origin</span><span class="value" id="valOrigin">-</span></div>
                 </div>
                 <div class="cta-box">
-                    <h3 id="ctaTitle" style="margin-top:0;">⚠️ History Records Restricted</h3>
-                    <p id="ctaDesc" style="font-size:0.9rem">Technical specs confirmed. Click below to check for accidents, title brands, and auction photos.</p>
-                    <button onclick="startRedirect()" class="btn-epic" id="ctaBtn">GET FULL HISTORY REPORT →</button>
+                    <h3>⚠️ History Records Restricted</h3>
+                    <p>Technical specs confirmed. Click below to check for accidents and auction photos.</p>
+                    <button id="ctaBtn" class="btn-epic">GET FULL HISTORY REPORT →</button>
                 </div>
             </div>
         </div>
@@ -91,54 +75,71 @@
 
 <div id="redirect-screen" class="container">
     <div class="card" style="margin-top: 50px;">
-        <h2 id="redTitle">Connecting to EpicVIN...</h2>
+        <h2>Connecting to EpicVIN...</h2>
         <div class="progress-container"><div class="progress-bar" id="progressBar"></div></div>
-        <p id="redDesc" style="font-size: 1rem; color: #666;">Securing access for VIN: <span id="syncVin" style="font-weight:700;"></span></p>
+        <p>Securing access for VIN: <span id="syncVin" style="font-weight:700;"></span></p>
     </div>
 </div>
 
 <footer>
-    <div class="container">
-        <p id="footerText">Data from NHTSA. Full reports provided by EpicVIN.</p>
-        <a href="https://omg10.com/4/10740816" class="monetag-link" target="_blank">Partner Deals & Ads</a>
-        <p style="margin-top:15px;">&copy; 2026 VIN Audit Pro</p>
-    </div>
+    <p>Data from NHTSA. Full reports provided by EpicVIN.</p>
+    <a href="https://omg10.com/4/10740816" style="color:#bbb; text-decoration:none; font-size:0.8rem;">Partner Deals & Ads</a>
+    <p>&copy; 2026 VIN Audit Pro</p>
 </footer>
 
 <script>
-    let currentLang = 'en';
-    
-    // Tu enlace de afiliado corregido para evitar errores 404
-    const epicAffiliateLink = "https://epicvin.com/?a_aid=mk2xwvsrxu92o";
+    const epicLink = "https://epicvin.com/?a_aid=mk2xwvsrxu92o"; // Tu link de afiliado
 
-    const i18n = {
-        en: {
-            title: "Free VIN Decoder & Safety Check", subtitle: "Official vehicle data for smart buyers",
-            placeholder: "Enter 17-digit VIN...", decode: "DECODE", lblBasic: "Vehicle", lblEngine: "Engine", lblOrigin: "Origin",
-            ctaTitle: "⚠️ History Records Restricted", ctaDesc: "Technical specs confirmed. Click below to check for accidents, title brands, and auction photos.", ctaBtn: "GET FULL HISTORY REPORT →",
-            errTitle: "VIN Not Found", errDesc: "Check your VIN. No letters I, O, or Q allowed.", errBtn: "Try Again",
-            redTitle: "Connecting to EpicVIN...", redDesc: "Securing access for VIN:",
-            footerText: "Data from NHTSA. Full reports provided by EpicVIN."
-        },
-        es: {
-            title: "Decodificador VIN Gratis", subtitle: "Datos oficiales para compradores inteligentes",
-            placeholder: "Ingresa los 17 dígitos...", decode: "DECODIFICAR", lblBasic: "Vehículo", lblEngine: "Motor", lblOrigin: "Origen",
-            ctaTitle: "⚠️ Historial Restringido", ctaDesc: "Datos técnicos confirmados. Haz clic abajo para revisar choques, títulos y fotos de subasta.", ctaBtn: "OBTENER REPORTE COMPLETO →",
-            errTitle: "VIN No Encontrado", errDesc: "Revisa el código. Los VIN no usan las letras I, O, ni Q.", errBtn: "Reintentar",
-            redTitle: "Conectando con EpicVIN...", redDesc: "Asegurando acceso para el VIN:",
-            footerText: "Datos de la NHTSA. Reportes y fotos de subasta provistos por EpicVIN."
+    // Función para procesar el VIN
+    async function handleDecode() {
+        const vin = document.getElementById('vinInput').value.trim();
+        if (vin.length < 11) { alert("Please enter a valid VIN"); return; }
+        
+        document.getElementById('loader').style.display = 'block';
+        document.getElementById('results-area').style.display = 'none';
+        document.getElementById('error-area').style.display = 'none';
+
+        try {
+            const res = await fetch(`https://vpic.nhtsa.dot.gov/api/vehicles/DecodeVinValues/${vin}?format=json`);
+            const data = await res.json();
+            const v = data.Results[0];
+
+            if (!v.Make || v.Make === "") {
+                document.getElementById('error-area').style.display = 'block';
+            } else {
+                document.getElementById('valBasic').innerText = `${v.ModelYear} ${v.Make} ${v.Model}`;
+                document.getElementById('valEngine').innerText = `${v.DisplacementL || ''}L ${v.EngineConfiguration || ''}`;
+                document.getElementById('valOrigin').innerText = v.PlantCountry || 'USA Records';
+                document.getElementById('results-area').style.display = 'block';
+            }
+        } catch (e) {
+            document.getElementById('error-area').style.display = 'block';
         }
-    };
+        document.getElementById('loader').style.display = 'none';
+    }
 
-    function changeLang(lang) {
-        currentLang = lang; const t = i18n[lang];
-        document.getElementById('title').innerText = t.title;
-        document.getElementById('subtitle').innerText = t.subtitle;
-        document.getElementById('vinInput').placeholder = t.placeholder;
-        document.getElementById('decodeBtn').innerText = t.decode;
-        document.getElementById('lblBasic').innerText = t.lblBasic;
-        document.getElementById('lblEngine').innerText = t.lblEngine;
-        document.getElementById('lblOrigin').innerText = t.lblOrigin;
-        document.getElementById('ctaTitle').innerText = t.ctaTitle;
-        document.getElementById('ctaDesc').innerText = t.ctaDesc;
-        document.getElementById('    
+    // Función de redirección a EpicVIN
+    function handleRedirect() {
+        const vin = document.getElementById('vinInput').value.trim();
+        document.getElementById('main-view').style.display = 'none';
+        document.getElementById('syncVin').innerText = vin || "Search";
+        document.getElementById('redirect-screen').style.display = 'block';
+        
+        let p = 0; 
+        const bar = document.getElementById('progressBar');
+        const interval = setInterval(() => {
+            p += 10; 
+            bar.style.width = p + "%";
+            if (p >= 100) { 
+                clearInterval(interval); 
+                window.location.href = epicLink; 
+            }
+        }, 70);
+    }
+
+    // Asignación de eventos (Asegura que el botón funcione)
+    document.getElementById('decodeBtn').addEventListener('click', handleDecode);
+    document.getElementById('ctaBtn').addEventListener('click', handleRedirect);
+</script>
+</body>
+</html>
