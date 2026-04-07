@@ -3,69 +3,86 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VIN Audit Pro | Official Vehicle History</title>
+    <title>VIN Audit Pro | Official Vehicle History Reports</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        :root { --primary: #0d6efd; --secondary: #0a47a3; --epic: #ff8c00; --vinaudit: #28a745; --bg: #f8f9fa; }
+        :root { --primary: #0d6efd; --secondary: #0a47a3; --epic: #ff8c00; --vinaudit: #28a745; --monetag: #6366f1; --bg: #f8f9fa; --dark: #1a202c; }
         body { font-family: 'Inter', sans-serif; margin: 0; background-color: var(--bg); color: #212529; line-height: 1.6; }
         nav { background: white; padding: 15px 20px; display: flex; justify-content: center; box-shadow: 0 2px 10px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 1000; }
         .logo { font-weight: 700; color: var(--secondary); display: flex; align-items: center; gap: 8px; font-size: 1.2rem; }
-        header { background: linear-gradient(135deg, var(--secondary), var(--primary)); color: white; padding: 40px 20px 80px; text-align: center; }
-        .container { max-width: 700px; margin: -60px auto 50px; padding: 0 15px; }
-        .card { background: white; border-radius: 20px; padding: 25px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); }
+        header { background: linear-gradient(135deg, var(--secondary), var(--primary)); color: white; padding: 45px 20px 85px; text-align: center; }
+        .container { max-width: 700px; margin: -65px auto 50px; padding: 0 15px; }
+        .card { background: white; border-radius: 20px; padding: 25px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); border: 1px solid rgba(0,0,0,0.05); }
+        
         .input-group { display: flex; gap: 10px; margin-bottom: 20px; }
-        input { flex: 1; padding: 15px; border: 2px solid #eee; border-radius: 12px; font-size: 1rem; text-transform: uppercase; outline: none; }
-        .btn-decode { background: var(--primary); color: white; border: none; padding: 0 25px; border-radius: 12px; font-weight: 700; cursor: pointer; transition: 0.3s; }
+        input { flex: 1; padding: 16px; border: 2px solid #edeff1; border-radius: 12px; font-size: 1rem; text-transform: uppercase; outline: none; transition: 0.3s; }
+        input:focus { border-color: var(--primary); box-shadow: 0 0 0 4px rgba(13,110,253,0.1); }
+        .btn-decode { background: var(--primary); color: white; border: none; padding: 0 30px; border-radius: 12px; font-weight: 700; cursor: pointer; transition: 0.3s; }
+        
         #results-area, #error-area, #loader, #redirect-screen { display: none; }
-        .data-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 15px 0; }
-        .data-item { background: #f9f9f9; padding: 12px; border-radius: 10px; border: 1px solid #eee; }
-        .label { font-size: 0.7rem; color: #888; display: block; text-transform: uppercase; }
-        .value { font-weight: 700; font-size: 0.95rem; color: #333; }
-        .provider-card { border: 2px solid #eee; border-radius: 15px; padding: 15px; margin-bottom: 15px; text-align: center; }
-        .btn-go { width: 100%; padding: 12px; border-radius: 10px; border: none; color: white; font-weight: 700; cursor: pointer; }
-        .progress-container { background: #eee; border-radius: 20px; height: 12px; margin: 25px 0; overflow: hidden; }
-        .progress-bar { background: var(--primary); height: 100%; width: 0%; transition: width 0.1s; }
+        .data-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 15px 0; }
+        .data-item { background: #f8fafc; padding: 14px; border-radius: 12px; border: 1px solid #e2e8f0; }
+        .label { font-size: 0.75rem; color: #64748b; display: block; text-transform: uppercase; }
+        .value { font-weight: 700; font-size: 1rem; color: #1e293b; }
+
+        .compare-section { margin-top: 30px; border-top: 2px dashed #e2e8f0; padding-top: 25px; }
+        .provider-card { border: 2px solid #f1f5f9; border-radius: 18px; padding: 20px; margin-bottom: 15px; text-align: center; transition: 0.3s; }
+        .btn-go { width: 100%; padding: 14px; border-radius: 12px; border: none; color: white; font-weight: 700; cursor: pointer; font-size: 1rem; margin-top: 10px; }
         
-        /* Estilo para la nueva sección de sub-afiliados */
-        .affiliate-footer { background: #1a202c; color: white; padding: 40px 20px; text-align: center; margin-top: 50px; border-radius: 30px 30px 0 0; }
-        .affiliate-link { display: inline-block; background: #4a5568; color: #edf2f7; padding: 12px 25px; border-radius: 10px; text-decoration: none; font-weight: 600; margin-top: 15px; transition: 0.3s; border: 1px solid #718096; }
-        .affiliate-link:hover { background: #2d3748; transform: translateY(-2px); }
+        .progress-container { background: #edf2f7; border-radius: 20px; height: 14px; margin: 25px 0; overflow: hidden; }
+        .progress-bar { height: 100%; width: 0%; transition: width 0.1s; }
         
-        @media (max-width: 500px) { .input-group { flex-direction: column; } .btn-decode { padding: 15px; } .data-grid { grid-template-columns: 1fr; } }
+        /* Footer Pro: Monetag + Subafiliados */
+        .partner-zone { background: var(--dark); color: white; padding: 50px 20px; text-align: center; border-radius: 35px 35px 0 0; margin-top: 60px; }
+        .btn-group-footer { display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; margin-top: 25px; }
+        .btn-footer { padding: 14px 24px; border-radius: 12px; text-decoration: none; font-weight: 700; font-size: 0.9rem; transition: 0.3s; border: 1px solid rgba(255,255,255,0.1); }
+        .btn-monetag { background: var(--monetag); color: white; }
+        .btn-partner { background: #334155; color: white; }
+        .btn-footer:hover { transform: translateY(-3px); filter: brightness(1.1); }
+
+        @media (max-width: 500px) { .input-group { flex-direction: column; } .data-grid { grid-template-columns: 1fr; } .btn-group-footer { flex-direction: column; } }
     </style>
 </head>
 <body>
 
-<nav><div class="logo"><i class="fas fa-shield-check"></i> VIN AUDIT PRO</div></nav>
+<nav><div class="logo"><i class="fas fa-file-invoice"></i> VIN AUDIT PRO</div></nav>
 
 <div id="main-view">
     <header>
-        <h1>Vehicle History Database</h1>
-        <p>Get official records & auction photos</p>
+        <h1>USA Vehicle History Search</h1>
+        <p>Official factory specs & title records</p>
     </header>
 
     <div class="container">
         <div class="card">
             <div class="input-group">
-                <input type="text" id="vinInput" placeholder="Enter 17-digit VIN..." maxlength="17">
+                <input type="text" id="vinInput" placeholder="Paste VIN here..." maxlength="17">
                 <button class="btn-decode" id="decodeBtn">SEARCH</button>
             </div>
-            <div id="loader" style="text-align:center; padding: 20px;"><i class="fas fa-circle-notch fa-spin fa-2x" style="color: var(--primary);"></i></div>
+
+            <div id="loader" style="text-align:center; padding: 30px;"><i class="fas fa-spinner fa-spin fa-3x" style="color: var(--primary);"></i></div>
+
             <div id="results-area">
                 <div class="data-grid">
-                    <div class="data-item"><span class="label">Vehicle</span><span class="value" id="valBasic">-</span></div>
-                    <div class="data-item"><span class="label">Engine</span><span class="value" id="valEngine">-</span></div>
+                    <div class="data-item"><span class="label">Model Year / Make</span><span class="value" id="valBasic">-</span></div>
+                    <div class="data-item"><span class="label">Engine Info</span><span class="value" id="valEngine">-</span></div>
                 </div>
-                <div class="provider-card">
-                    <img src="https://epicvin.com/images/logo.svg" height="22" style="margin-bottom:10px;">
-                    <p style="font-size:0.8rem; color:#666;">Best for **Auction Photos** & Salvage Records.</p>
-                    <button onclick="handleRedirect('epic')" class="btn-go" style="background:var(--epic)">CHECK ON EPICVIN</button>
-                </div>
-                <div class="provider-card">
-                    <img src="https://www.vinaudit.com/wp-content/themes/vinaudit/images/logo.png" height="22" style="margin-bottom:10px;">
-                    <p style="font-size:0.8rem; color:#666;">Best for **Title Data** & Owner History.</p>
-                    <button onclick="handleRedirect('vinaudit')" class="btn-go" style="background:var(--vinaudit)">CHECK ON VINAUDIT</button>
+
+                <div class="compare-section">
+                    <h3 style="text-align:center; margin-bottom:20px;">Select a History Provider:</h3>
+                    
+                    <div class="provider-card" style="border-color: #ffe0b3; background: #fffcf9;">
+                        <img src="https://epicvin.com/images/logo.svg" height="25" alt="EpicVIN">
+                        <p style="font-size:0.85rem; color:#555; margin: 10px 0;">Best for: **Auction Photos** & Salvage check.</p>
+                        <button onclick="handleRedirect('epic')" class="btn-go" style="background:var(--epic)">GET EPICVIN REPORT</button>
+                    </div>
+
+                    <div class="provider-card" style="border-color: #c6ebc9; background: #fafffb;">
+                        <img src="https://www.vinaudit.com/wp-content/themes/vinaudit/images/logo.png" height="25" alt="VinAudit">
+                        <p style="font-size:0.85rem; color:#555; margin: 10px 0;">Best for: **Official NMVTIS** & Title data.</p>
+                        <button onclick="handleRedirect('vinaudit')" class="btn-go" style="background:var(--vinaudit)">GET VINAUDIT REPORT</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -74,58 +91,73 @@
 
 <div id="redirect-screen" class="container">
     <div class="card" style="margin-top: 50px; text-align: center;">
-        <h2>Connecting to Provider...</h2>
+        <h2 id="redTitle">Connecting to Secure Server...</h2>
         <div class="progress-container"><div class="progress-bar" id="progressBar"></div></div>
-        <p>Verifying VIN: <span id="syncVin" style="font-weight:700;"></span></p>
+        <p style="color:#666;">VIN Verified: <span id="syncVin" style="font-weight:700; color:#333;"></span></p>
     </div>
 </div>
 
-<div class="affiliate-footer">
+<div class="partner-zone">
     <div style="max-width: 600px; margin: 0 auto;">
-        <h3 style="margin-bottom: 10px; font-size: 1.4rem;">💰 Want to Earn Money?</h3>
-        <p style="font-size: 0.9rem; color: #cbd5e0; margin-bottom: 20px;">
-            Join our partner network! Start selling vehicle reports and earn high commissions for every sale. It's free to join.
+        <h2 style="margin-bottom: 10px;">Exclusive Opportunities</h2>
+        <p style="color: #94a3b8; font-size: 0.95rem;">
+            Check out our partner deals or join our network to start earning commissions today.
         </p>
-        <a href="https://affiliate.epicvin.com/affiliates/signup.php?a_aid=mk2xwvsrxu92o" class="affiliate-link" target="_blank">
-            <i class="fas fa-hand-holding-usd"></i> Become a Partner Today
-        </a>
+        
+        <div class="btn-group-footer">
+            <a href="https://omg10.com/4/10740816" class="btn-footer btn-monetag" target="_blank">
+                <i class="fas fa-tags"></i> View Special Offers
+            </a>
+
+            <a href="https://affiliate.epicvin.com/affiliates/signup.php?a_aid=mk2xwvsrxu92o" class="btn-footer btn-partner" target="_blank">
+                <i class="fas fa-users"></i> Become a Partner
+            </a>
+        </div>
     </div>
-    <div style="margin-top: 40px; border-top: 1px solid #4a5568; padding-top: 20px; font-size: 0.75rem; color: #718096;">
-        <p>Data from NHTSA. Reports provided by licensed providers.</p>
-        <p>&copy; 2026 VIN Audit Pro | <a href="https://omg10.com/4/10740816" style="color:#718096; text-decoration:none;">Partner Deals</a></p>
+    <div style="margin-top: 45px; border-top: 1px solid #334155; padding-top: 25px; font-size: 0.8rem; color: #64748b;">
+        <p>Data from NHTSA.gov. Reports by EpicVIN and VinAudit.</p>
+        <p>&copy; 2026 VIN Audit Pro</p>
     </div>
 </div>
 
 <script>
-    const ids = { epic: "mk2xwvsrxu92o", vinaudit: "metodorelacion" };
+    const links = {
+        epic: "https://epicvin.com/?a_aid=mk2xwvsrxu92o",
+        vinaudit: "https://www.vinaudit.com/go.php?r=bWV0b2RvcmVsYWNpb25hbEBnbWFpbC5jb20"
+    };
 
     async function handleDecode() {
         const vin = document.getElementById('vinInput').value.trim();
-        if (vin.length < 11) return;
+        if (vin.length < 11) { alert("Please enter a valid VIN"); return; }
         document.getElementById('loader').style.display = 'block';
         document.getElementById('results-area').style.display = 'none';
         try {
             const res = await fetch(`https://vpic.nhtsa.dot.gov/api/vehicles/DecodeVinValues/${vin}?format=json`);
             const data = await res.json();
             const v = data.Results[0];
-            document.getElementById('valBasic').innerText = `${v.ModelYear} ${v.Make} ${v.Model}`;
-            document.getElementById('valEngine').innerText = `${v.DisplacementL || ''}L ${v.EngineConfiguration || ''}`;
-            document.getElementById('results-area').style.display = 'block';
-        } catch (e) { alert("Error connecting to database."); }
+            if (!v.Make) { alert("VIN not found."); } else {
+                document.getElementById('valBasic').innerText = `${v.ModelYear} ${v.Make} ${v.Model}`;
+                document.getElementById('valEngine').innerText = `${v.DisplacementL || ''}L ${v.EngineConfiguration || ''}`;
+                document.getElementById('results-area').style.display = 'block';
+            }
+        } catch (e) { alert("Connection error."); }
         document.getElementById('loader').style.display = 'none';
     }
 
     function handleRedirect(provider) {
         const vin = document.getElementById('vinInput').value.trim();
-        let url = provider === 'epic' ? `https://epicvin.com/?a_aid=${ids.epic}` : `https://www.vinaudit.com/report?affid=${ids.vinaudit}&vin=${vin}`;
+        let finalURL = links[provider];
+        if (provider === 'vinaudit') finalURL += `&vin=${vin}`;
         document.getElementById('main-view').style.display = 'none';
         document.getElementById('syncVin').innerText = vin;
         document.getElementById('redirect-screen').style.display = 'block';
-        let p = 0; const bar = document.getElementById('progressBar');
+        const bar = document.getElementById('progressBar');
+        bar.style.backgroundColor = provider === 'epic' ? '#ff8c00' : '#28a745';
+        let p = 0;
         const interval = setInterval(() => {
             p += 5; bar.style.width = p + "%";
-            if (p >= 100) { clearInterval(interval); window.location.href = url; }
-        }, 50);
+            if (p >= 100) { clearInterval(interval); window.location.href = finalURL; }
+        }, 40);
     }
     document.getElementById('decodeBtn').addEventListener('click', handleDecode);
 </script>
