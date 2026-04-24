@@ -3,44 +3,35 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VIN Audit Pro | Reportes de Historial de Vehículos</title>
+    <title>VIN Audit Pro | Official Vehicle History</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        :root { --primary: #0d6efd; --secondary: #0a47a3; --epic: #ff8c00; --vinaudit: #28a745; --monetag: #6366f1; --bg: #f8f9fa; --dark: #1a202c; }
-        body { font-family: 'Inter', sans-serif; margin: 0; background-color: var(--bg); color: #212529; line-height: 1.6; transition: 0.3s; }
+        :root { --primary: #0d6efd; --secondary: #0a47a3; --epic: #ff8c00; --vinaudit: #28a745; --bg: #f8f9fa; --dark: #1a202c; }
+        body { font-family: 'Inter', sans-serif; margin: 0; background-color: var(--bg); color: #212529; line-height: 1.6; }
         nav { background: white; padding: 10px 20px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 10px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 1000; }
         .logo { font-weight: 700; color: var(--secondary); display: flex; align-items: center; gap: 8px; font-size: 1.1rem; }
         .lang-btn { background: #eee; border: none; padding: 8px 12px; border-radius: 8px; font-weight: 700; cursor: pointer; font-size: 0.8rem; }
-        
         header { background: linear-gradient(135deg, var(--secondary), var(--primary)); color: white; padding: 40px 20px 80px; text-align: center; }
         .container { max-width: 700px; margin: -60px auto 50px; padding: 0 15px; }
         .card { background: white; border-radius: 20px; padding: 25px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); border: 1px solid rgba(0,0,0,0.05); }
-        
         .input-group { display: flex; gap: 10px; margin-bottom: 20px; }
         input { flex: 1; padding: 16px; border: 2px solid #edeff1; border-radius: 12px; font-size: 1rem; text-transform: uppercase; outline: none; }
         .btn-decode { background: var(--primary); color: white; border: none; padding: 0 25px; border-radius: 12px; font-weight: 700; cursor: pointer; }
-        
-        #results-area, #error-area, #loader, #redirect-screen { display: none; }
+        #results-area, #loader, #redirect-screen { display: none; }
         .data-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 15px 0; }
         .data-item { background: #f8fafc; padding: 14px; border-radius: 12px; border: 1px solid #e2e8f0; }
         .label { font-size: 0.7rem; color: #64748b; display: block; text-transform: uppercase; }
         .value { font-weight: 700; font-size: 0.95rem; color: #1e293b; }
-
         .compare-section { margin-top: 30px; border-top: 2px dashed #e2e8f0; padding-top: 25px; }
         .provider-card { border: 2px solid #f1f5f9; border-radius: 18px; padding: 15px; margin-bottom: 15px; text-align: center; }
         .btn-go { width: 100%; padding: 14px; border-radius: 12px; border: none; color: white; font-weight: 700; cursor: pointer; font-size: 0.9rem; margin-top: 10px; }
-        
         .progress-container { background: #edf2f7; border-radius: 20px; height: 12px; margin: 25px 0; overflow: hidden; }
         .progress-bar { height: 100%; width: 0%; transition: width 0.1s; }
-        
         .partner-zone { background: var(--dark); color: white; padding: 40px 20px; text-align: center; border-radius: 30px 30px 0 0; margin-top: 60px; }
-        .btn-group-footer { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin-top: 20px; }
-        .btn-footer { padding: 12px 20px; border-radius: 10px; text-decoration: none; font-weight: 700; font-size: 0.85rem; transition: 0.3s; }
-        .btn-monetag { background: var(--monetag); color: white; }
-        .btn-partner { background: #334155; color: white; }
-
-        @media (max-width: 500px) { .input-group { flex-direction: column; } .data-grid { grid-template-columns: 1fr; } .btn-group-footer { flex-direction: column; } }
+        .btn-partner { display: inline-block; background: #334155; color: white; padding: 14px 28px; border-radius: 12px; text-decoration: none; font-weight: 700; font-size: 0.9rem; transition: 0.3s; border: 1px solid #475569; margin-top: 20px; }
+        .btn-partner:hover { background: #475569; transform: scale(1.05); }
+        @media (max-width: 500px) { .input-group { flex-direction: column; } .data-grid { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body>
@@ -62,24 +53,19 @@
                 <input type="text" id="vinInput" placeholder="Pega el VIN aquí..." maxlength="17">
                 <button class="btn-decode" id="decodeBtn">BUSCAR</button>
             </div>
-
             <div id="loader" style="text-align:center; padding: 30px;"><i class="fas fa-spinner fa-spin fa-2x" style="color: var(--primary);"></i></div>
-
             <div id="results-area">
                 <div class="data-grid">
                     <div class="data-item"><span class="label" id="lbl-year">Año / Marca</span><span class="value" id="valBasic">-</span></div>
                     <div class="data-item"><span class="label" id="lbl-engine">Motor</span><span class="value" id="valEngine">-</span></div>
                 </div>
-
                 <div class="compare-section">
                     <h3 style="text-align:center; margin-bottom:15px;" id="txt-choose">Selecciona un proveedor:</h3>
-                    
                     <div class="provider-card" style="border-color: #ffe0b3; background: #fffcf9;">
                         <img src="https://epicvin.com/images/logo.svg" height="22" alt="EpicVIN">
                         <p style="font-size:0.8rem; color:#555; margin: 8px 0;" id="desc-epic">Ideal para: **Fotos de Subastas** y daños por inundación.</p>
                         <button onclick="handleRedirect('epic')" class="btn-go" style="background:var(--epic)" id="btn-epic">REPORTE EPICVIN</button>
                     </div>
-
                     <div class="provider-card" style="border-color: #c6ebc9; background: #fafffb;">
                         <img src="https://www.vinaudit.com/wp-content/themes/vinaudit/images/logo.png" height="22" alt="VinAudit">
                         <p style="font-size:0.8rem; color:#555; margin: 8px 0;" id="desc-vinaudit">Ideal para: **Datos NMVTIS** y dueños anteriores.</p>
@@ -101,19 +87,13 @@
 
 <div class="partner-zone">
     <div style="max-width: 600px; margin: 0 auto;">
-        <h2 id="txt-partnerH2">Oportunidades Exclusivas</h2>
+        <h2 id="txt-partnerH2">¿Quieres vender estos reportes?</h2>
         <p style="color: #94a3b8; font-size: 0.9rem;" id="txt-partnerP">
-            Únete a nuestra red o conoce más sobre nuestras ofertas.
+            Únete a nuestra red de socios y genera ingresos recomendando el mejor historial vehicular.
         </p>
-        
-        <div class="btn-group-footer">
-            <a href="https://omg10.com/4/10740816" class="btn-footer btn-monetag" target="_blank" id="btn-monetag">
-                <i class="fas fa-eye"></i> Conocer más
-            </a>
-            <a href="https://affiliate.epicvin.com/affiliates/signup.php?a_aid=mk2xwvsrxu92o" class="btn-footer btn-partner" target="_blank" id="btn-partner">
-                <i class="fas fa-briefcase"></i> Ser Socio
-            </a>
-        </div>
+        <a href="https://affiliate.epicvin.com/affiliates/signup.php?a_aid=mk2xwvsrxu92o" class="btn-partner" target="_blank" id="btn-partner">
+            <i class="fas fa-briefcase"></i> Ser Socio
+        </a>
     </div>
 </div>
 
@@ -131,9 +111,9 @@
             choose: "Select a history provider:", descEpic: "Best for: **Auction Photos** & salvage check.",
             btnEpic: "GET EPICVIN REPORT", descVin: "Best for: **Official NMVTIS** & title data.",
             btnVin: "GET VINAUDIT REPORT", redTitle: "Connecting to Secure Server...",
-            verifying: "Verifying VIN:", partnerH2: "Exclusive Opportunities",
-            partnerP: "Join our network or learn more about our offers.",
-            monetag: "Learn More", partner: "Become a Partner", switcher: "Español"
+            verifying: "Verifying VIN:", partnerH2: "Want to sell these reports?",
+            partnerP: "Join our partner network and start earning commissions today.",
+            partner: "Become a Partner", switcher: "Español"
         },
         es: {
             h1: "Búsqueda de Historial USA", p: "Datos oficiales de fábrica y registros de títulos",
@@ -141,9 +121,9 @@
             choose: "Selecciona un proveedor:", descEpic: "Ideal para: **Fotos de Subastas** y daños por inundación.",
             btnEpic: "REPORTE EPICVIN", descVin: "Ideal para: **Datos NMVTIS** y dueños anteriores.",
             btnVin: "REPORTE VINAUDIT", redTitle: "Conectando al Servidor Seguro...",
-            verifying: "Verificando VIN:", partnerH2: "Oportunidades Exclusivas",
-            partnerP: "Únete a nuestra red o conoce más sobre nuestras ofertas.",
-            monetag: "Conocer más", partner: "Ser Socio", switcher: "English"
+            verifying: "Verificando VIN:", partnerH2: "¿Quieres vender estos reportes?",
+            partnerP: "Únete a nuestra red de socios y genera ingresos recomendando el mejor historial vehicular.",
+            partner: "Ser Socio", switcher: "English"
         }
     };
 
@@ -165,7 +145,6 @@
         document.getElementById('txt-verifying').innerText = t.verifying;
         document.getElementById('txt-partnerH2').innerText = t.partnerH2;
         document.getElementById('txt-partnerP').innerText = t.partnerP;
-        document.getElementById('btn-monetag').innerHTML = `<i class="fas fa-eye"></i> ${t.monetag}`;
         document.getElementById('btn-partner').innerHTML = `<i class="fas fa-briefcase"></i> ${t.partner}`;
         document.getElementById('langSwitcher').innerText = t.switcher;
     }
@@ -196,10 +175,7 @@
         const bar = document.getElementById('progressBar');
         bar.style.backgroundColor = provider === 'epic' ? '#ff8c00' : '#28a745';
         let p = 0;
-        const interval = setInterval(() => {
-            p += 5; bar.style.width = p + "%";
-            if (p >= 100) { clearInterval(interval); window.location.href = finalURL; }
-        }, 40);
+        const interval = setInterval(() => { p += 5; bar.style.width = p + "%"; if (p >= 100) { clearInterval(interval); window.location.href = finalURL; } }, 40);
     }
     document.getElementById('decodeBtn').addEventListener('click', handleDecode);
 </script>
